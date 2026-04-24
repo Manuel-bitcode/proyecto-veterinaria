@@ -1,41 +1,54 @@
-import { Notification } from "@/lib/types";
-import { Check, X } from "lucide-react";
+import type { Notification } from "@/lib/types";
+import { Check, Bell } from "lucide-react";
 
 interface NotificationListProps {
   notifications: Notification[];
   onMarkAsRead: (id: number) => Promise<void>;
+  showOnlyUnread?: boolean;
 }
 
 export default function NotificationList({
   notifications,
   onMarkAsRead,
+  showOnlyUnread = false,
 }: NotificationListProps) {
-  if (notifications.length === 0) {
+  const visibleNotifications = showOnlyUnread
+    ? notifications.filter((n) => !n.readAt)
+    : notifications;
+
+  if (visibleNotifications.length === 0) {
     return (
-      <div className="text-center py-8 text-slate-500">
-        No tienes notificaciones pendientes.
+      <div className="rounded-3xl border border-slate-100 bg-white p-6 text-sm text-slate-500 shadow-soft">
+        No tienes notificaciones por mostrar.
       </div>
     );
   }
 
   return (
     <div className="space-y-3">
-      {notifications.map((n, i) => (
+      {visibleNotifications.map((n) => (
         <div
           key={n.id}
-          className={`card transform transition-all duration-350 ${
-            !n.readAt
-              ? "border-l-4 border-l-brand-500 bg-brand-50/30 hover:bg-brand-50"
-              : "opacity-75"
-          }`}
-          style={{
-            animation: `slideInUp 0.4s ease-out ${i * 0.05}s both`,
-          }}
+          className={`rounded-3xl border p-4 shadow-soft transition-all duration-350 ${n.readAt
+              ? "border-slate-100 bg-white"
+              : "border-brand-100 bg-brand-50"
+            }`}
         >
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="rounded-2xl bg-brand-100 p-2 text-brand-700">
+              <Bell size={18} />
+            </div>
+
             <div className="flex-1">
-              <p className="text-sm font-medium text-slate-900">{n.message}</p>
-              <p className="text-xs text-slate-500 mt-2">
+              <p className="text-sm font-medium text-slate-800">{n.message}</p>
+
+              {n.appointment && (
+                <p className="mt-1 text-xs text-slate-500">
+                  {n.appointment.pet.name} · {n.appointment.service.name}
+                </p>
+              )}
+
+              <p className="mt-2 text-xs text-slate-400">
                 {new Date(n.sentAt).toLocaleString("es-CO", {
                   month: "short",
                   day: "numeric",
@@ -45,18 +58,15 @@ export default function NotificationList({
               </p>
             </div>
 
-            {!n.readAt ? (
+            {!n.readAt && (
               <button
+                type="button"
                 onClick={() => onMarkAsRead(n.id)}
-                className="flex-shrink-0 group/btn relative"
+                className="rounded-full border border-brand-100 bg-white p-2 text-brand-700 transition hover:bg-brand-100"
+                title="Marcar como leída"
               >
-                <div className="absolute -inset-2 bg-brand-500/20 rounded-full opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
-                <Check className="w-5 h-5 text-brand-600 relative group-hover/btn:scale-110 transition-transform" />
+                <Check size={16} />
               </button>
-            ) : (
-              <div className="flex-shrink-0 text-slate-400">
-                <Check className="w-5 h-5" />
-              </div>
             )}
           </div>
         </div>

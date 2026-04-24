@@ -1,20 +1,30 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import { Notification } from "@/lib/types";
-import { fetchNotifications, markNotificationAsRead } from "@/lib/notifications-api";
+import type { Notification } from "@/lib/types";
+import {
+  fetchNotifications,
+  markNotificationAsRead,
+} from "@/lib/notifications-api";
 
 export function useNotifications() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   async function load() {
     try {
-      console.log("Cargando notificaciones...");
+      setLoading(true);
+      setError(null);
+
       const data = await fetchNotifications();
-      console.log("Notificaciones cargadas:", data.length);
       setNotifications(data);
     } catch (err) {
-      console.error("Error loading notifications:", err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "No fue posible cargar las notificaciones"
+      );
     } finally {
       setLoading(false);
     }
@@ -27,15 +37,29 @@ export function useNotifications() {
   const markAsRead = async (id: number) => {
     try {
       await markNotificationAsRead(id);
+
       setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, readAt: new Date().toISOString() } : n))
+        prev.map((n) =>
+          n.id === id ? { ...n, readAt: new Date().toISOString() } : n
+        )
       );
     } catch (err) {
-      console.error("Error marking as read:", err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "No fue posible marcar la notificación como leída"
+      );
     }
   };
 
   const unreadCount = notifications.filter((n) => !n.readAt).length;
 
-  return { notifications, loading, markAsRead, unreadCount, reload: load };
+  return {
+    notifications,
+    loading,
+    error,
+    unreadCount,
+    markAsRead,
+    reload: load,
+  };
 }

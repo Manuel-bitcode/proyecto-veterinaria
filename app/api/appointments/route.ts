@@ -38,7 +38,14 @@ export async function POST(req: Request) {
       data: {
         userId: pet.ownerId,
         appointmentId: appointment.id,
-        message: `Recordatorio: cita de ${appointment.service.name} para ${appointment.pet.name} el ${appointment.date.toLocaleDateString("es-CO")}`,
+        message: `Recordatorio: ${appointment.pet.name} tiene una cita de ${appointment.service.name
+          } el ${appointment.date.toLocaleDateString("es-CO")} a las ${appointment.date.toLocaleTimeString(
+            "es-CO",
+            {
+              hour: "2-digit",
+              minute: "2-digit",
+            }
+          )}.`,
       },
     });
     return ok({ appointment }, 201);
