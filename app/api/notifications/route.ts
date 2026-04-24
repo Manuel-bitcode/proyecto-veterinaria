@@ -1,12 +1,12 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
-import { ok, unauthorized, fail, handleError } from "@/lib/http";
+import { ok, fail, handleError } from "@/lib/http";
 
 export async function GET() {
   try {
     const session = await getSession();
-    if (!session) return unauthorized();
+    if (!session) throw new Error("UNAUTHORIZED");
 
     const notifications = await prisma.notification.findMany({
       where: { userId: session.userId },
@@ -30,7 +30,7 @@ export async function GET() {
 export async function PATCH(req: NextRequest) {
   try {
     const session = await getSession();
-    if (!session) return unauthorized();
+    if (!session) throw new Error("UNAUTHORIZED");
 
     const { id } = await req.json();
     const notificationId = Number(id);

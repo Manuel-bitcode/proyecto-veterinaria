@@ -34,7 +34,7 @@ export default function UserForm({
       <input
         name="phone"
         placeholder="Teléfono"
-        defaultValue={editing?.phone}
+        defaultValue={editing?.phone || ""}
       />
       <select name="role" defaultValue={editing?.role || "USER"}>
         <option value="USER">Usuario</option>

@@ -51,7 +51,7 @@ export default function RecordForm({
       <textarea
         name="observations"
         placeholder="Observaciones"
-        defaultValue={editing?.notes}
+        defaultValue={editing?.notes || ""}
       />
       {error && <p className="text-sm text-red-600">{error}</p>}
       <button className="btn-primary w-full">Guardar historial</button>

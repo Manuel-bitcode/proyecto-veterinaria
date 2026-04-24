@@ -46,7 +46,7 @@ export default function PetForm({
             name="age"
             type="number"
             placeholder="Edad"
-            defaultValue={editing?.age}
+            defaultValue={editing?.age ? editing?.age : ""}
             className="focus:ring-brand-100"
           />
           <input
@@ -54,7 +54,7 @@ export default function PetForm({
             type="number"
             step="0.1"
             placeholder="Peso (kg)"
-            defaultValue={editing?.weight}
+            defaultValue={editing?.weight || ""}
             className="focus:ring-brand-100"
           />
         </div>

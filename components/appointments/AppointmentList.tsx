@@ -105,7 +105,7 @@ export default function AppointmentList({
               </div>
             </div>
 
-            {a.status === "PENDING" && isUpcoming && (
+            {a.status === "SCHEDULED" && isUpcoming && (
               <button
                 onClick={() => onCancel(a.id)}
                 className="mt-4 w-full px-4 py-2 rounded-xl bg-red-50 text-red-700 hover:bg-red-100 transition-colors text-sm font-semibold"
