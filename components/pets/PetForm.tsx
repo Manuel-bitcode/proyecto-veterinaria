@@ -1,4 +1,5 @@
 import { Pet } from "@/lib/types";
+import { PawPrint } from "lucide-react";
 
 interface PetFormProps {
   editing: Pet | null;
@@ -15,42 +16,66 @@ export default function PetForm({
 }: PetFormProps) {
   return (
     <form id="petForm" action={onSubmit} className="card space-y-4">
-      <h2 className="text-xl font-bold">
-        {editing ? "Editar mascota" : "Nueva mascota"}
-      </h2>
-      <input
-        name="name"
-        placeholder="Nombre"
-        defaultValue={editing?.name}
-        required
-      />
-      <input
-        name="breed"
-        placeholder="Raza"
-        defaultValue={editing?.breed}
-      />
-      <div className="grid grid-cols-2 gap-3">
-        <input
-          name="age"
-          type="number"
-          placeholder="Edad"
-          defaultValue={editing?.age}
-        />
-        <input
-          name="weight"
-          type="number"
-          step="0.1"
-          placeholder="Peso"
-          defaultValue={editing?.weight}
-        />
+      <div className="flex items-center gap-3 mb-2">
+        <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center">
+          <PawPrint className="w-5 h-5 text-brand-700" />
+        </div>
+        <h2 className="text-xl font-bold">
+          {editing ? "Editar mascota" : "Nueva mascota"}
+        </h2>
       </div>
-      <select name="sex" defaultValue={editing?.sex}>
-        <option value="">Sexo</option>
-        <option>Macho</option>
-        <option>Hembra</option>
-      </select>
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <button className="btn-primary w-full">Guardar</button>
+
+      <div className="space-y-3">
+        <input
+          name="name"
+          placeholder="Nombre de la mascota"
+          defaultValue={editing?.name}
+          required
+          className="focus:ring-brand-100"
+        />
+
+        <input
+          name="breed"
+          placeholder="Raza"
+          defaultValue={editing?.breed}
+          className="focus:ring-brand-100"
+        />
+
+        <div className="grid grid-cols-2 gap-3">
+          <input
+            name="age"
+            type="number"
+            placeholder="Edad"
+            defaultValue={editing?.age}
+            className="focus:ring-brand-100"
+          />
+          <input
+            name="weight"
+            type="number"
+            step="0.1"
+            placeholder="Peso (kg)"
+            defaultValue={editing?.weight}
+            className="focus:ring-brand-100"
+          />
+        </div>
+
+        <select name="sex" defaultValue={editing?.sex} className="focus:ring-brand-100">
+          <option value="">Selecciona sexo</option>
+          <option>Macho</option>
+          <option>Hembra</option>
+        </select>
+      </div>
+
+      {error && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-2xl text-sm text-red-700 font-medium">
+          {error}
+        </div>
+      )}
+
+      <button className="btn-primary w-full">
+        {editing ? "Actualizar mascota" : "Agregar mascota"}
+      </button>
+
       {editing && (
         <button
           type="button"

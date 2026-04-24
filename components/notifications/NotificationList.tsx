@@ -1,4 +1,5 @@
 import { Notification } from "@/lib/types";
+import { Check, X } from "lucide-react";
 
 interface NotificationListProps {
   notifications: Notification[];
@@ -18,26 +19,44 @@ export default function NotificationList({
   }
 
   return (
-    <div className="space-y-4">
-      {notifications.map((n) => (
+    <div className="space-y-3">
+      {notifications.map((n, i) => (
         <div
           key={n.id}
-          className={`card ${!n.readAt ? "border-l-4 border-l-brand-500" : ""}`}
+          className={`card transform transition-all duration-350 ${
+            !n.readAt
+              ? "border-l-4 border-l-brand-500 bg-brand-50/30 hover:bg-brand-50"
+              : "opacity-75"
+          }`}
+          style={{
+            animation: `slideInUp 0.4s ease-out ${i * 0.05}s both`,
+          }}
         >
-          <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
-              <p className="text-sm">{n.message}</p>
-              <p className="text-xs text-slate-500 mt-1">
-                {new Date(n.sentAt).toLocaleString("es-CO")}
+              <p className="text-sm font-medium text-slate-900">{n.message}</p>
+              <p className="text-xs text-slate-500 mt-2">
+                {new Date(n.sentAt).toLocaleString("es-CO", {
+                  month: "short",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </p>
             </div>
-            {!n.readAt && (
+
+            {!n.readAt ? (
               <button
                 onClick={() => onMarkAsRead(n.id)}
-                className="text-xs bg-brand-50 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-100"
+                className="flex-shrink-0 group/btn relative"
               >
-                Marcar como leída
+                <div className="absolute -inset-2 bg-brand-500/20 rounded-full opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
+                <Check className="w-5 h-5 text-brand-600 relative group-hover/btn:scale-110 transition-transform" />
               </button>
+            ) : (
+              <div className="flex-shrink-0 text-slate-400">
+                <Check className="w-5 h-5" />
+              </div>
             )}
           </div>
         </div>
